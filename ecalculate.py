@@ -26,27 +26,10 @@ class CButton(Button):
                         size_hint_align=FILL_BOTH)
         self.action = action
         self.window = window
-        self.callback_clicked_add(self.clicked)
+        self.callback_clicked_add(self.window.click_button)
         self.window.table.pack(self, x, y, 1, 1)
         self.show()
     
-    def clicked(self, caller):
-        #TODO: Probably I should move this to the Calculator class
-        if self.action == 'submit':
-            self.window.calculate()
-        elif self.action:
-            if self.window.action and self.window.value1:
-                self.window.calculate()
-            self.window.action = self.action
-            self.window.value1 = self.window.value2
-            self.window.value2 = ''
-        else:
-            if self.action == 'point':
-                self.window.value2 += '.'
-            else:
-                self.window.value2 += self.text
-        self.window.display()
-
 
 class Calculator(StandardWindow):
     def __init__(self):
@@ -107,6 +90,23 @@ class Calculator(StandardWindow):
     
     def display(self):
         self.field.text = self.value2
+ 
+    def click_button(self, caller):
+        if caller.action == 'submit':
+            self.calculate()
+        elif caller.action:
+            if self.action and self.value1:
+                self.calculate()
+            self.action = caller.action
+            self.value1 = self.value2
+            self.value2 = ''
+        else:
+            if caller.action == 'point':
+                self.value2 += '.'
+            else:
+                self.value2 += caller.text
+        self.display()
+
 
 
 if __name__ == "__main__":
