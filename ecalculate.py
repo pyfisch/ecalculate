@@ -5,6 +5,8 @@
 # (C) 2014 Pyfisch
 # Released under the MIT-License.
 
+from functools import partial
+
 from efl.evas import EVAS_HINT_EXPAND, EVAS_HINT_FILL
 from efl import elementary
 from efl.elementary.window import StandardWindow
@@ -18,18 +20,6 @@ EXPAND_HORIZONTAL = EVAS_HINT_EXPAND, 0.0
 FILL_BOTH = EVAS_HINT_FILL, EVAS_HINT_FILL
 FILL_HORIZONTAL = EVAS_HINT_FILL, 0.0
 
-
-class CButton(Button):
-    def __init__(self, window, text, x, y, action=None):
-        Button.__init__(self, window, text=str(text),
-                        size_hint_weight=EXPAND_BOTH,
-                        size_hint_align=FILL_BOTH)
-        self.action = action
-        self.window = window
-        self.callback_clicked_add(self.window.click_button)
-        self.window.table.pack(self, x, y, 1, 1)
-        self.show()
-    
 
 class Calculator(StandardWindow):
     def __init__(self):
@@ -52,22 +42,22 @@ class Calculator(StandardWindow):
         self.box.pack_end(self.table)
         self.table.show()
         # Create buttons
-        CButton(self, x=0, y=0, text='1') 
-        CButton(self, x=1, y=0, text='2') 
-        CButton(self, x=2, y=0, text='3') 
-        CButton(self, x=0, y=1, text='4') 
-        CButton(self, x=1, y=1, text='5') 
-        CButton(self, x=2, y=1, text='6') 
-        CButton(self, x=0, y=2, text='7') 
-        CButton(self, x=1, y=2, text='8') 
-        CButton(self, x=2, y=2, text='9') 
-        CButton(self, x=0, y=3, text='0') 
-        CButton(self, x=4, y=0, text='/', action='divide') 
-        CButton(self, x=4, y=1, text='*', action='multiply') 
-        CButton(self, x=4, y=2, text='-', action='minus') 
-        CButton(self, x=4, y=3, text='+', action='plus') 
-        CButton(self, x=2, y=3, text='=', action='submit')
-        CButton(self, x=1, y=3, text='.', action='point')
+        self.add_button(x=0, y=0, text='1') 
+        self.add_button(x=1, y=0, text='2') 
+        self.add_button(x=2, y=0, text='3') 
+        self.add_button(x=0, y=1, text='4') 
+        self.add_button(x=1, y=1, text='5') 
+        self.add_button(x=2, y=1, text='6') 
+        self.add_button(x=0, y=2, text='7') 
+        self.add_button(x=1, y=2, text='8') 
+        self.add_button(x=2, y=2, text='9') 
+        self.add_button(x=0, y=3, text='0') 
+        self.add_button(x=4, y=0, text='/', action='divide') 
+        self.add_button(x=4, y=1, text='*', action='multiply') 
+        self.add_button(x=4, y=2, text='-', action='minus') 
+        self.add_button(x=4, y=3, text='+', action='plus') 
+        self.add_button(x=2, y=3, text='=', action='submit')
+        self.add_button(x=1, y=3, text='.', action='point')
 
         self.show()
 
@@ -91,23 +81,30 @@ class Calculator(StandardWindow):
     def display(self):
         self.field.text = self.value2
  
-    def click_button(self, caller):
-        if caller.action == 'submit':
+    def click_button(self, caller, actiontype):
+        if actiontype == 'submit':
             self.calculate()
-        elif caller.action:
+        elif actiontype == 'point':
+            self.value2 += '.'
+        elif actiontype:
             if self.action and self.value1:
                 self.calculate()
-            self.action = caller.action
+            self.action = actiontype
             self.value1 = self.value2
             self.value2 = ''
         else:
-            if caller.action == 'point':
-                self.value2 += '.'
-            else:
-                self.value2 += caller.text
+            self.value2 += caller.text
         self.display()
-
-
+    
+    def add_button(self, x, y, text, action=None):
+        button = Button(self, text=text,
+                        size_hint_weight=EXPAND_BOTH,
+                        size_hint_align=FILL_BOTH)
+        button.callback_clicked_add(partial(self.click_button,
+                                            actiontype=action))
+        self.table.pack(button, x, y, 1, 1)
+        button.show()
+ 
 
 if __name__ == "__main__":
     elementary.init()
