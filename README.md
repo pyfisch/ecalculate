@@ -9,4 +9,4 @@ It is released under the MIT License.
 
 You can report bugs here or in the Bodhi Linux forum [thread](http://forums.bodhilinux.com/index.php?/topic/9723-ecalculate/).
 
-[![Screenshot](https://raw2.github.com/pyfisch/ecalculate/master/docs/screenshot.png)]
+![Screenshot](https://raw2.github.com/pyfisch/ecalculate/master/docs/screenshot.png)
