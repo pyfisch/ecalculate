@@ -32,7 +32,7 @@ class Calculator(object):
         self.memory = ''
         self.operand = None
         # Create the main window.
-	self.window = StandardWindow("ECalculate", "ECalculate", autodel=True, size=(300, 300))
+	self.window = StandardWindow("eCalculate", "eCalculate", autodel=True, size=(300, 300))
         # Create box that holds all GUI elements.
         box = Box(self.window, size_hint_weight=EXPAND_BOTH, size_hint_align=FILL_BOTH)
         self.window.resize_object_add(box)
@@ -110,7 +110,6 @@ class Calculator(object):
         :param char: The character entered.
         :param _: I do not know ;-) (Passed automatically, always None?).
         """
-        print _
         if not char in '1234567890.+-*/=':
             return None
         if char == '.' and ('.' in caller.text or caller.text == ''):
