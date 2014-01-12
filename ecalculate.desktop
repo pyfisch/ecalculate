@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=0.1
+Type=Application
+Name=eCalculate
+Comment=Simple calculator for Enlightenment.
+Exec=ecalculate
+Icon=/usr/share/pixmaps/ecalculate.png
+MimeType=
+Actions=
+
