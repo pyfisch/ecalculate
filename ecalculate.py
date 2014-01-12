@@ -13,6 +13,8 @@ from efl.elementary.button import Button
 from efl.elementary.entry import Entry
 from efl.elementary.table import Table
 
+__version__ = '0.1.0'
+
 EXPAND_BOTH = EVAS_HINT_EXPAND, EVAS_HINT_EXPAND
 EXPAND_HORIZONTAL = EVAS_HINT_EXPAND, 0.0
 FILL_BOTH = EVAS_HINT_FILL, EVAS_HINT_FILL
