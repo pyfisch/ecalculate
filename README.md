@@ -1,4 +1,4 @@
-eCalculate v0.1.0
+eCalculate v0.1
 =================
 
 eCalculate is an immediate execution calculator for Enlightenment using Python and Elementary. It currently supports only addition, subtraction, multiplication and division but more operators are planned.
