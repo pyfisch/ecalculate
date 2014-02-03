@@ -5,6 +5,8 @@
 # (C) 2014 Pyfisch
 # Released under the MIT-License.
 
+import re
+
 from efl.evas import EVAS_HINT_EXPAND, EVAS_HINT_FILL
 from efl import elementary
 from efl.elementary.window import StandardWindow
@@ -13,7 +15,7 @@ from efl.elementary.button import Button
 from efl.elementary.entry import Entry
 from efl.elementary.table import Table
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 EXPAND_BOTH = EVAS_HINT_EXPAND, EVAS_HINT_EXPAND
 EXPAND_HORIZONTAL = EVAS_HINT_EXPAND, 0.0
@@ -100,7 +102,8 @@ class Calculator(object):
         """Do the calculation. This function does not check if the
         values are valid.
         """
-        self.field.text = str(self.CALC_ACTIONS[self.operand](float(self.memory), float(self.field.text))).rstrip('.0')
+        result = self.CALC_ACTIONS[self.operand](float(self.memory), float(self.field.text))
+        self.field.text = re.sub('\.0$', '', str(result))
         self.memory = ''
 
     def filter_markup(self, caller, char, _):
