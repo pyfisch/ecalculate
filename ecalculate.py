@@ -15,7 +15,7 @@ from efl.elementary.button import Button
 from efl.elementary.entry import Entry
 from efl.elementary.table import Table
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 EXPAND_BOTH = EVAS_HINT_EXPAND, EVAS_HINT_EXPAND
 EXPAND_HORIZONTAL = EVAS_HINT_EXPAND, 0.0
@@ -35,6 +35,7 @@ class Calculator(object):
         # Create mathematical attributes.
         self.memory = ''
         self.operand = None
+        self.display_is_result = False
         # Create the main window.
 	self.window = StandardWindow("eCalculate", "eCalculate", autodel=True, size=(300, 300))
         # Create box that holds all GUI elements.
@@ -115,26 +116,26 @@ class Calculator(object):
         :param char: The character entered.
         :param _: I do not know ;-) (Passed automatically, always None?).
         """
-        if not char in '1234567890.+-*/=':
-            return None
-        if char == '.' and ('.' in caller.text or caller.text == ''):
-            return None
-        if char == '=':
-            if self.memory and caller.text:
+        if not ((not char in '1234567890.+-*/=') or \
+            (char == '.' and ('.' in caller.text or caller.text == ''))):
+            if char == '=' and self.memory and caller.text:
                 self.calculate()
+                self.display_is_result = True
+            elif char in '1234567890.':
+                if not self.display_is_result:
+                    return char
             else:
-                self.memory = ''
-                caller.text = ''
-            return None
-        if char in self.CALC_ACTIONS:
-            if self.memory and caller.text:
-                self.calculate()
-            self.operand = char 
-            if caller.text:
-                self.memory = caller.text
-                caller.text = ''
-            return None 
-        return char 
+                self.display_is_result = False
+                if char == '=':
+                    self.memory = ''
+                    caller.text = ''
+                elif char in self.CALC_ACTIONS:
+                    if self.memory and caller.text:
+                        self.calculate()
+                    self.operand = char 
+                    if caller.text:
+                        self.memory = caller.text
+                        caller.text = ''
     
     CALC_ACTIONS = {
         '+': lambda a, b: a + b,
